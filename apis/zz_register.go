@@ -11,6 +11,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 
 	v1beta1 "github.com/upbound/provider-azure/apis/apimanagement/v1beta1"
+	v1beta1appconfiguration "github.com/upbound/provider-azure/apis/appconfiguration/v1beta1"
 	v1beta1authorization "github.com/upbound/provider-azure/apis/authorization/v1beta1"
 	v1beta1azure "github.com/upbound/provider-azure/apis/azure/v1beta1"
 	v1beta1cache "github.com/upbound/provider-azure/apis/cache/v1beta1"
@@ -53,6 +54,7 @@ func init() {
 	// Register the types with the Scheme so the components can map objects to GroupVersionKinds and back
 	AddToSchemes = append(AddToSchemes,
 		v1beta1.SchemeBuilder.AddToScheme,
+		v1beta1appconfiguration.SchemeBuilder.AddToScheme,
 		v1beta1authorization.SchemeBuilder.AddToScheme,
 		v1beta1azure.SchemeBuilder.AddToScheme,
 		v1beta1cache.SchemeBuilder.AddToScheme,

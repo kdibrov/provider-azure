@@ -19,7 +19,7 @@ var ExternalNameNotTestedConfigs = map[string]config.ExternalName{
 	// aadb2c
 	//
 	// AAD B2C Directories can be imported using the resource id
-	// /subscriptions/12345678-1234-9876-4563-123456789012/resourceGroups/example-resource-group/providers/Microsoft.AzureActiveDirectory/b2cDirectories/directory-name
+	// /subscriptions/12345678-1234appconfiguration-9876-4563-123456789012/resourceGroups/example-resource-group/providers/Microsoft.AzureActiveDirectory/b2cDirectories/directory-name
 	"azurerm_aadb2c_directory": config.IdentifierFromProvider,
 
 	// aadiam
@@ -169,22 +169,4 @@ var ExternalNameNotTestedConfigs = map[string]config.ExternalName{
 	// API Management Users can be imported using the resource id
 	// /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/mygroup1/providers/Microsoft.ApiManagement/service/instance1/users/abc123
 	"azurerm_api_management_user": config.TemplatedStringAsIdentifier("user_id", "/subscriptions/{{ .setup.configuration.subscription_id }}/resourceGroups/{{ .parameters.resource_group_name }}/providers/Microsoft.ApiManagement/service/{{ .parameters.api_management_name }}/users/{{ .external_name }}"),
-
-	// appconfiguration
-	//
-	// App Configurations can be imported using the resource id
-	// /subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/resourceGroup1/providers/Microsoft.AppConfiguration/configurationStores/appConf1
-	"azurerm_app_configuration": config.TemplatedStringAsIdentifier("name", "/subscriptions/{{ .setup.configuration.subscription_id }}/resourceGroups/{{ .parameters.resource_group_name }}/providers/Microsoft.AppConfiguration/configurationStores/{{ .external_name }}"),
-	// There are two different syntaxes:
-	// App Configuration Features can be imported using the resource id
-	// /subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/resourceGroup1/providers/Microsoft.AppConfiguration/configurationStores/appConf1/AppConfigurationFeature/appConfFeature1/Label/label1
-	// If you wish to import a key with an empty label then sustitute the label's name with %00, like this
-	// /subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/resourceGroup1/providers/Microsoft.AppConfiguration/configurationStores/appConf1/AppConfigurationFeature/appConfFeature1/Label/%00
-	"azurerm_app_configuration_feature": config.IdentifierFromProvider,
-	// There are two different syntaxes:
-	// App Configuration Keys can be imported using the resource id
-	// /subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/resourceGroup1/providers/Microsoft.AppConfiguration/configurationStores/appConf1/AppConfigurationKey/appConfKey1/Label/label1
-	// If you wish to import a key with an empty label then sustitute the label's name with %00, like this
-	// /subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/resourceGroup1/providers/Microsoft.AppConfiguration/configurationStores/appConf1/AppConfigurationKey/appConfKey1/Label/%00
-	"azurerm_app_configuration_key": config.IdentifierFromProvider,
 }

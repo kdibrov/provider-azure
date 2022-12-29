@@ -1,0 +1,52 @@
+apiVersion: appconfiguration.azure.upbound.io/v1beta1
+kind: Feature
+metadata:
+  annotations:
+    meta.upbound.io/example-id: appconfiguration/v1beta1/feature
+  labels:
+    testing.upbound.io/example-name: test
+  name: test
+spec:
+  forProvider:
+    configurationStoreIdSelector:
+      matchLabels:
+        testing.upbound.io/example-name: appconf
+    description: test description
+    enabled: true
+    label: acctest-ackeylabel-%d
+    name: acctest-ackey-%d
+
+---
+
+apiVersion: appconfiguration.azure.upbound.io/v1beta1
+kind: Configuration
+metadata:
+  annotations:
+    meta.upbound.io/example-id: appconfiguration/v1beta1/feature
+  labels:
+    testing.upbound.io/example-name: appconf
+  name: appconf
+spec:
+  forProvider:
+    location: West Europe
+    name: appConf1
+    resourceGroupNameSelector:
+      matchLabels:
+        testing.upbound.io/example-name: example
+
+---
+
+apiVersion: azure.upbound.io/v1beta1
+kind: ResourceGroup
+metadata:
+  annotations:
+    meta.upbound.io/example-id: appconfiguration/v1beta1/feature
+  labels:
+    testing.upbound.io/example-name: example
+  name: example
+spec:
+  forProvider:
+    location: West Europe
+
+---
+

@@ -1,0 +1,64 @@
+apiVersion: appconfiguration.azure.upbound.io/v1beta1
+kind: Key
+metadata:
+  annotations:
+    meta.upbound.io/example-id: appconfiguration/v1beta1/key
+  labels:
+    testing.upbound.io/example-name: test
+  name: test
+spec:
+  forProvider:
+    configurationStoreIdSelector:
+      matchLabels:
+        testing.upbound.io/example-name: appconftest
+    key: appConfKey1
+    label: somelabel
+    value: a test
+
+---
+
+apiVersion: appconfiguration.azure.upbound.io/v1beta1
+kind: Configuration
+metadata:
+  annotations:
+    meta.upbound.io/example-id: appconfiguration/v1beta1/configuration
+  labels:
+    testing.upbound.io/example-name: appconftest
+  name: appconftest
+spec:
+  forProvider:
+    location: West Europe
+    resourceGroupNameSelector:
+      matchLabels:
+        testing.upbound.io/example-name: appconftestgrp
+    name: appconftestname
+
+---
+
+apiVersion: azure.upbound.io/v1beta1
+kind: ResourceGroup
+metadata:
+  annotations:
+    meta.upbound.io/example-id: appconfiguration/v1beta1/configuration
+  labels:
+    testing.upbound.io/example-name: appconftestgrp
+  name: appconftestgrp
+spec:
+  forProvider:
+    location: West Europe
+  
+---
+
+apiVersion: authorization.azure.upbound.io/v1beta1
+kind: RoleAssignment
+metadata:
+  annotations:
+    meta.upbound.io/example-id: appconfiguration/v1beta1/key
+  labels:
+    testing.upbound.io/example-name: appconf_dataowner
+  name: appconf-dataowner
+spec:
+  forProvider:
+    principalId: ${data.azurerm_client_config.current.object_id}
+    roleDefinitionName: App Configuration Data Owner
+    scope: ${azurerm_app_configuration.appconf.id}

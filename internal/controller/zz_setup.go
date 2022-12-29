@@ -10,6 +10,9 @@ import (
 	"github.com/upbound/upjet/pkg/controller"
 
 	management "github.com/upbound/provider-azure/internal/controller/apimanagement/management"
+	configuration "github.com/upbound/provider-azure/internal/controller/appconfiguration/configuration"
+	feature "github.com/upbound/provider-azure/internal/controller/appconfiguration/feature"
+	key "github.com/upbound/provider-azure/internal/controller/appconfiguration/key"
 	policydefinition "github.com/upbound/provider-azure/internal/controller/authorization/policydefinition"
 	resourcegrouppolicyassignment "github.com/upbound/provider-azure/internal/controller/authorization/resourcegrouppolicyassignment"
 	roleassignment "github.com/upbound/provider-azure/internal/controller/authorization/roleassignment"
@@ -68,7 +71,7 @@ import (
 	datasetkustocluster "github.com/upbound/provider-azure/internal/controller/datashare/datasetkustocluster"
 	datasetkustodatabase "github.com/upbound/provider-azure/internal/controller/datashare/datasetkustodatabase"
 	datashare "github.com/upbound/provider-azure/internal/controller/datashare/datashare"
-	configuration "github.com/upbound/provider-azure/internal/controller/dbformariadb/configuration"
+	configurationdbformariadb "github.com/upbound/provider-azure/internal/controller/dbformariadb/configuration"
 	database "github.com/upbound/provider-azure/internal/controller/dbformariadb/database"
 	firewallrule "github.com/upbound/provider-azure/internal/controller/dbformariadb/firewallrule"
 	server "github.com/upbound/provider-azure/internal/controller/dbformariadb/server"
@@ -117,7 +120,7 @@ import (
 	accesspolicy "github.com/upbound/provider-azure/internal/controller/keyvault/accesspolicy"
 	certificate "github.com/upbound/provider-azure/internal/controller/keyvault/certificate"
 	certificateissuer "github.com/upbound/provider-azure/internal/controller/keyvault/certificateissuer"
-	key "github.com/upbound/provider-azure/internal/controller/keyvault/key"
+	keykeyvault "github.com/upbound/provider-azure/internal/controller/keyvault/key"
 	managedhardwaresecuritymodule "github.com/upbound/provider-azure/internal/controller/keyvault/managedhardwaresecuritymodule"
 	managedstorageaccount "github.com/upbound/provider-azure/internal/controller/keyvault/managedstorageaccount"
 	managedstorageaccountsastokendefinition "github.com/upbound/provider-azure/internal/controller/keyvault/managedstorageaccountsastokendefinition"
@@ -276,6 +279,9 @@ import (
 func Setup(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
 		management.Setup,
+		configuration.Setup,
+		feature.Setup,
+		key.Setup,
 		policydefinition.Setup,
 		resourcegrouppolicyassignment.Setup,
 		roleassignment.Setup,
@@ -334,7 +340,7 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		datasetkustocluster.Setup,
 		datasetkustodatabase.Setup,
 		datashare.Setup,
-		configuration.Setup,
+		configurationdbformariadb.Setup,
 		database.Setup,
 		firewallrule.Setup,
 		server.Setup,
@@ -383,7 +389,7 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		accesspolicy.Setup,
 		certificate.Setup,
 		certificateissuer.Setup,
-		key.Setup,
+		keykeyvault.Setup,
 		managedhardwaresecuritymodule.Setup,
 		managedstorageaccount.Setup,
 		managedstorageaccountsastokendefinition.Setup,
