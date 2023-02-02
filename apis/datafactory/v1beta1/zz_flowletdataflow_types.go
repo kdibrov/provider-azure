@@ -13,15 +13,15 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
-type DataFlowObservation struct {
+type FlowletDataFlowObservation struct {
 
-	// The ID of the Data Factory Data Flow.
+	// The ID of the Data Factory Flowlet Data Flow.
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 }
 
-type DataFlowParameters struct {
+type FlowletDataFlowParameters struct {
 
-	// List of tags that can be used for describing the Data Factory Data Flow.
+	// List of tags that can be used for describing the Data Factory Flowlet Data Flow.
 	// +kubebuilder:validation:Optional
 	Annotations []*string `json:"annotations,omitempty" tf:"annotations,omitempty"`
 
@@ -39,50 +39,51 @@ type DataFlowParameters struct {
 	// +kubebuilder:validation:Optional
 	DataFactoryIDSelector *v1.Selector `json:"dataFactoryIdSelector,omitempty" tf:"-"`
 
-	// The description for the Data Factory Data Flow.
+	// The description for the Data Factory Flowlet Data Flow.
 	// +kubebuilder:validation:Optional
 	Description *string `json:"description,omitempty" tf:"description,omitempty"`
 
-	// The folder that this Data Flow is in. If not specified, the Data Flow will appear at the root level.
+	// The folder that this Data Flow is in. If not specified, the Data Flow will appear at the
+	// root level.
 	// +kubebuilder:validation:Optional
 	Folder *string `json:"folder,omitempty" tf:"folder,omitempty"`
 
-	// The script for the Data Factory Data Flow.
+	// The script for the Data Factory Flowlet Data Flow.
 	// +kubebuilder:validation:Optional
 	Script *string `json:"script,omitempty" tf:"script,omitempty"`
 
-	// The script lines for the Data Factory Data Flow.
+	// The script lines for the Data Factory Flowlet Data Flow.
 	// +kubebuilder:validation:Optional
 	ScriptLines []*string `json:"scriptLines,omitempty" tf:"script_lines,omitempty"`
 
 	// One or more sink blocks as defined below.
 	// +kubebuilder:validation:Required
-	Sink []SinkParameters `json:"sink" tf:"sink,omitempty"`
+	Sink []FlowletDataFlowSinkParameters `json:"sink" tf:"sink,omitempty"`
 
 	// One or more source blocks as defined below.
 	// +kubebuilder:validation:Required
-	Source []SourceParameters `json:"source" tf:"source,omitempty"`
+	Source []FlowletDataFlowSourceParameters `json:"source" tf:"source,omitempty"`
 
 	// One or more transformation blocks as defined below.
 	// +kubebuilder:validation:Optional
-	Transformation []TransformationParameters `json:"transformation,omitempty" tf:"transformation,omitempty"`
+	Transformation []FlowletDataFlowTransformationParameters `json:"transformation,omitempty" tf:"transformation,omitempty"`
 }
 
-type DataSetObservation struct {
+type FlowletDataFlowSinkLinkedServiceObservation struct {
 }
 
-type DataSetParameters struct {
+type FlowletDataFlowSinkLinkedServiceParameters struct {
 
 	// The name for the Data Flow transformation.
-	// +crossplane:generate:reference:type=github.com/upbound/provider-azure/apis/datafactory/v1beta1.DataSetJSON
+	// +crossplane:generate:reference:type=github.com/upbound/provider-azure/apis/datafactory/v1beta1.LinkedCustomService
 	// +kubebuilder:validation:Optional
 	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 
-	// Reference to a DataSetJSON in datafactory to populate name.
+	// Reference to a LinkedCustomService in datafactory to populate name.
 	// +kubebuilder:validation:Optional
 	NameRef *v1.Reference `json:"nameRef,omitempty" tf:"-"`
 
-	// Selector for a DataSetJSON in datafactory to populate name.
+	// Selector for a LinkedCustomService in datafactory to populate name.
 	// +kubebuilder:validation:Optional
 	NameSelector *v1.Selector `json:"nameSelector,omitempty" tf:"-"`
 
@@ -91,10 +92,58 @@ type DataSetParameters struct {
 	Parameters map[string]*string `json:"parameters,omitempty" tf:"parameters,omitempty"`
 }
 
-type FlowletObservation struct {
+type FlowletDataFlowSinkObservation struct {
 }
 
-type FlowletParameters struct {
+type FlowletDataFlowSinkParameters struct {
+
+	// A dataset block as defined below.
+	// +kubebuilder:validation:Optional
+	DataSet []SinkDataSetParameters `json:"dataset,omitempty" tf:"dataset,omitempty"`
+
+	// The description for the Data Flow Source.
+	// +kubebuilder:validation:Optional
+	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// A flowlet block as defined below.
+	// +kubebuilder:validation:Optional
+	Flowlet []SinkFlowletParameters `json:"flowlet,omitempty" tf:"flowlet,omitempty"`
+
+	// A linked_service block as defined below.
+	// +kubebuilder:validation:Optional
+	LinkedService []FlowletDataFlowSinkLinkedServiceParameters `json:"linkedService,omitempty" tf:"linked_service,omitempty"`
+
+	// The name for the Data Flow Source.
+	// +kubebuilder:validation:Required
+	Name *string `json:"name" tf:"name,omitempty"`
+
+	// A rejected_linked_service block as defined below.
+	// +kubebuilder:validation:Optional
+	RejectedLinkedService []SinkRejectedLinkedServiceParameters `json:"rejectedLinkedService,omitempty" tf:"rejected_linked_service,omitempty"`
+
+	// A schema_linked_service block as defined below.
+	// +kubebuilder:validation:Optional
+	SchemaLinkedService []SinkSchemaLinkedServiceParameters `json:"schemaLinkedService,omitempty" tf:"schema_linked_service,omitempty"`
+}
+
+type FlowletDataFlowSourceDataSetObservation struct {
+}
+
+type FlowletDataFlowSourceDataSetParameters struct {
+
+	// The name for the Data Flow transformation.
+	// +kubebuilder:validation:Required
+	Name *string `json:"name" tf:"name,omitempty"`
+
+	// A map of parameters to associate with the Data Factory Linked Service.
+	// +kubebuilder:validation:Optional
+	Parameters map[string]*string `json:"parameters,omitempty" tf:"parameters,omitempty"`
+}
+
+type FlowletDataFlowSourceFlowletObservation struct {
+}
+
+type FlowletDataFlowSourceFlowletParameters struct {
 
 	// Specifies the reference data flow parameters from dataset.
 	// +kubebuilder:validation:Optional
@@ -118,97 +167,21 @@ type FlowletParameters struct {
 	Parameters map[string]*string `json:"parameters,omitempty" tf:"parameters,omitempty"`
 }
 
-type RejectedLinkedServiceObservation struct {
+type FlowletDataFlowSourceLinkedServiceObservation struct {
 }
 
-type RejectedLinkedServiceParameters struct {
+type FlowletDataFlowSourceLinkedServiceParameters struct {
 
 	// The name for the Data Flow transformation.
-	// +kubebuilder:validation:Required
-	Name *string `json:"name" tf:"name,omitempty"`
-
-	// A map of parameters to associate with the Data Factory Linked Service.
-	// +kubebuilder:validation:Optional
-	Parameters map[string]*string `json:"parameters,omitempty" tf:"parameters,omitempty"`
-}
-
-type SchemaLinkedServiceObservation struct {
-}
-
-type SchemaLinkedServiceParameters struct {
-
-	// The name for the Data Flow transformation.
-	// +kubebuilder:validation:Required
-	Name *string `json:"name" tf:"name,omitempty"`
-
-	// A map of parameters to associate with the Data Factory Linked Service.
-	// +kubebuilder:validation:Optional
-	Parameters map[string]*string `json:"parameters,omitempty" tf:"parameters,omitempty"`
-}
-
-type SinkLinkedServiceObservation struct {
-}
-
-type SinkLinkedServiceParameters struct {
-
-	// The name for the Data Flow transformation.
-	// +kubebuilder:validation:Required
-	Name *string `json:"name" tf:"name,omitempty"`
-
-	// A map of parameters to associate with the Data Factory Linked Service.
-	// +kubebuilder:validation:Optional
-	Parameters map[string]*string `json:"parameters,omitempty" tf:"parameters,omitempty"`
-}
-
-type SinkObservation struct {
-}
-
-type SinkParameters struct {
-
-	// A dataset block as defined below.
-	// +kubebuilder:validation:Optional
-	DataSet []DataSetParameters `json:"dataset,omitempty" tf:"dataset,omitempty"`
-
-	// The description for the Data Flow Source.
-	// +kubebuilder:validation:Optional
-	Description *string `json:"description,omitempty" tf:"description,omitempty"`
-
-	// A flowlet block as defined below.
-	// +kubebuilder:validation:Optional
-	Flowlet []FlowletParameters `json:"flowlet,omitempty" tf:"flowlet,omitempty"`
-
-	// A linked_service block as defined below.
-	// +kubebuilder:validation:Optional
-	LinkedService []SinkLinkedServiceParameters `json:"linkedService,omitempty" tf:"linked_service,omitempty"`
-
-	// The name for the Data Flow Source.
-	// +kubebuilder:validation:Required
-	Name *string `json:"name" tf:"name,omitempty"`
-
-	// A rejected_linked_service block as defined below.
-	// +kubebuilder:validation:Optional
-	RejectedLinkedService []RejectedLinkedServiceParameters `json:"rejectedLinkedService,omitempty" tf:"rejected_linked_service,omitempty"`
-
-	// A schema_linked_service block as defined below.
-	// +kubebuilder:validation:Optional
-	SchemaLinkedService []SchemaLinkedServiceParameters `json:"schemaLinkedService,omitempty" tf:"schema_linked_service,omitempty"`
-}
-
-type SourceDataSetObservation struct {
-}
-
-type SourceDataSetParameters struct {
-
-	// The name for the Data Flow transformation.
-	// +crossplane:generate:reference:type=github.com/upbound/provider-azure/apis/datafactory/v1beta1.DataSetJSON
+	// +crossplane:generate:reference:type=github.com/upbound/provider-azure/apis/datafactory/v1beta1.LinkedCustomService
 	// +kubebuilder:validation:Optional
 	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 
-	// Reference to a DataSetJSON in datafactory to populate name.
+	// Reference to a LinkedCustomService in datafactory to populate name.
 	// +kubebuilder:validation:Optional
 	NameRef *v1.Reference `json:"nameRef,omitempty" tf:"-"`
 
-	// Selector for a DataSetJSON in datafactory to populate name.
+	// Selector for a LinkedCustomService in datafactory to populate name.
 	// +kubebuilder:validation:Optional
 	NameSelector *v1.Selector `json:"nameSelector,omitempty" tf:"-"`
 
@@ -217,55 +190,14 @@ type SourceDataSetParameters struct {
 	Parameters map[string]*string `json:"parameters,omitempty" tf:"parameters,omitempty"`
 }
 
-type SourceFlowletObservation struct {
+type FlowletDataFlowSourceObservation struct {
 }
 
-type SourceFlowletParameters struct {
-
-	// Specifies the reference data flow parameters from dataset.
-	// +kubebuilder:validation:Optional
-	DataSetParameters *string `json:"datasetParameters,omitempty" tf:"dataset_parameters,omitempty"`
-
-	// The name for the Data Flow transformation.
-	// +crossplane:generate:reference:type=github.com/upbound/provider-azure/apis/datafactory/v1beta1.FlowletDataFlow
-	// +kubebuilder:validation:Optional
-	Name *string `json:"name,omitempty" tf:"name,omitempty"`
-
-	// Reference to a FlowletDataFlow in datafactory to populate name.
-	// +kubebuilder:validation:Optional
-	NameRef *v1.Reference `json:"nameRef,omitempty" tf:"-"`
-
-	// Selector for a FlowletDataFlow in datafactory to populate name.
-	// +kubebuilder:validation:Optional
-	NameSelector *v1.Selector `json:"nameSelector,omitempty" tf:"-"`
-
-	// A map of parameters to associate with the Data Factory Linked Service.
-	// +kubebuilder:validation:Optional
-	Parameters map[string]*string `json:"parameters,omitempty" tf:"parameters,omitempty"`
-}
-
-type SourceLinkedServiceObservation struct {
-}
-
-type SourceLinkedServiceParameters struct {
-
-	// The name for the Data Flow transformation.
-	// +kubebuilder:validation:Required
-	Name *string `json:"name" tf:"name,omitempty"`
-
-	// A map of parameters to associate with the Data Factory Linked Service.
-	// +kubebuilder:validation:Optional
-	Parameters map[string]*string `json:"parameters,omitempty" tf:"parameters,omitempty"`
-}
-
-type SourceObservation struct {
-}
-
-type SourceParameters struct {
+type FlowletDataFlowSourceParameters struct {
 
 	// A dataset block as defined below.
 	// +kubebuilder:validation:Optional
-	DataSet []SourceDataSetParameters `json:"dataset,omitempty" tf:"dataset,omitempty"`
+	DataSet []FlowletDataFlowSourceDataSetParameters `json:"dataset,omitempty" tf:"dataset,omitempty"`
 
 	// The description for the Data Flow Source.
 	// +kubebuilder:validation:Optional
@@ -273,11 +205,11 @@ type SourceParameters struct {
 
 	// A flowlet block as defined below.
 	// +kubebuilder:validation:Optional
-	Flowlet []SourceFlowletParameters `json:"flowlet,omitempty" tf:"flowlet,omitempty"`
+	Flowlet []FlowletDataFlowSourceFlowletParameters `json:"flowlet,omitempty" tf:"flowlet,omitempty"`
 
 	// A linked_service block as defined below.
 	// +kubebuilder:validation:Optional
-	LinkedService []SourceLinkedServiceParameters `json:"linkedService,omitempty" tf:"linked_service,omitempty"`
+	LinkedService []FlowletDataFlowSourceLinkedServiceParameters `json:"linkedService,omitempty" tf:"linked_service,omitempty"`
 
 	// The name for the Data Flow Source.
 	// +kubebuilder:validation:Required
@@ -285,17 +217,17 @@ type SourceParameters struct {
 
 	// A rejected_linked_service block as defined below.
 	// +kubebuilder:validation:Optional
-	RejectedLinkedService []SourceRejectedLinkedServiceParameters `json:"rejectedLinkedService,omitempty" tf:"rejected_linked_service,omitempty"`
+	RejectedLinkedService []FlowletDataFlowSourceRejectedLinkedServiceParameters `json:"rejectedLinkedService,omitempty" tf:"rejected_linked_service,omitempty"`
 
 	// A schema_linked_service block as defined below.
 	// +kubebuilder:validation:Optional
-	SchemaLinkedService []SourceSchemaLinkedServiceParameters `json:"schemaLinkedService,omitempty" tf:"schema_linked_service,omitempty"`
+	SchemaLinkedService []FlowletDataFlowSourceSchemaLinkedServiceParameters `json:"schemaLinkedService,omitempty" tf:"schema_linked_service,omitempty"`
 }
 
-type SourceRejectedLinkedServiceObservation struct {
+type FlowletDataFlowSourceRejectedLinkedServiceObservation struct {
 }
 
-type SourceRejectedLinkedServiceParameters struct {
+type FlowletDataFlowSourceRejectedLinkedServiceParameters struct {
 
 	// The name for the Data Flow transformation.
 	// +kubebuilder:validation:Required
@@ -306,10 +238,10 @@ type SourceRejectedLinkedServiceParameters struct {
 	Parameters map[string]*string `json:"parameters,omitempty" tf:"parameters,omitempty"`
 }
 
-type SourceSchemaLinkedServiceObservation struct {
+type FlowletDataFlowSourceSchemaLinkedServiceObservation struct {
 }
 
-type SourceSchemaLinkedServiceParameters struct {
+type FlowletDataFlowSourceSchemaLinkedServiceParameters struct {
 
 	// The name for the Data Flow transformation.
 	// +kubebuilder:validation:Required
@@ -320,10 +252,10 @@ type SourceSchemaLinkedServiceParameters struct {
 	Parameters map[string]*string `json:"parameters,omitempty" tf:"parameters,omitempty"`
 }
 
-type TransformationDataSetObservation struct {
+type FlowletDataFlowTransformationDataSetObservation struct {
 }
 
-type TransformationDataSetParameters struct {
+type FlowletDataFlowTransformationDataSetParameters struct {
 
 	// The name for the Data Flow transformation.
 	// +kubebuilder:validation:Required
@@ -334,10 +266,10 @@ type TransformationDataSetParameters struct {
 	Parameters map[string]*string `json:"parameters,omitempty" tf:"parameters,omitempty"`
 }
 
-type TransformationFlowletObservation struct {
+type FlowletDataFlowTransformationFlowletObservation struct {
 }
 
-type TransformationFlowletParameters struct {
+type FlowletDataFlowTransformationFlowletParameters struct {
 
 	// Specifies the reference data flow parameters from dataset.
 	// +kubebuilder:validation:Optional
@@ -352,10 +284,10 @@ type TransformationFlowletParameters struct {
 	Parameters map[string]*string `json:"parameters,omitempty" tf:"parameters,omitempty"`
 }
 
-type TransformationLinkedServiceObservation struct {
+type FlowletDataFlowTransformationLinkedServiceObservation struct {
 }
 
-type TransformationLinkedServiceParameters struct {
+type FlowletDataFlowTransformationLinkedServiceParameters struct {
 
 	// The name for the Data Flow transformation.
 	// +kubebuilder:validation:Required
@@ -366,14 +298,14 @@ type TransformationLinkedServiceParameters struct {
 	Parameters map[string]*string `json:"parameters,omitempty" tf:"parameters,omitempty"`
 }
 
-type TransformationObservation struct {
+type FlowletDataFlowTransformationObservation struct {
 }
 
-type TransformationParameters struct {
+type FlowletDataFlowTransformationParameters struct {
 
 	// A dataset block as defined below.
 	// +kubebuilder:validation:Optional
-	DataSet []TransformationDataSetParameters `json:"dataset,omitempty" tf:"dataset,omitempty"`
+	DataSet []FlowletDataFlowTransformationDataSetParameters `json:"dataset,omitempty" tf:"dataset,omitempty"`
 
 	// The description for the Data Flow transformation.
 	// +kubebuilder:validation:Optional
@@ -381,62 +313,131 @@ type TransformationParameters struct {
 
 	// A flowlet block as defined below.
 	// +kubebuilder:validation:Optional
-	Flowlet []TransformationFlowletParameters `json:"flowlet,omitempty" tf:"flowlet,omitempty"`
+	Flowlet []FlowletDataFlowTransformationFlowletParameters `json:"flowlet,omitempty" tf:"flowlet,omitempty"`
 
 	// A linked_service block as defined below.
 	// +kubebuilder:validation:Optional
-	LinkedService []TransformationLinkedServiceParameters `json:"linkedService,omitempty" tf:"linked_service,omitempty"`
+	LinkedService []FlowletDataFlowTransformationLinkedServiceParameters `json:"linkedService,omitempty" tf:"linked_service,omitempty"`
 
 	// The name for the Data Flow transformation.
 	// +kubebuilder:validation:Required
 	Name *string `json:"name" tf:"name,omitempty"`
 }
 
-// DataFlowSpec defines the desired state of DataFlow
-type DataFlowSpec struct {
-	v1.ResourceSpec `json:",inline"`
-	ForProvider     DataFlowParameters `json:"forProvider"`
+type SinkDataSetObservation struct {
 }
 
-// DataFlowStatus defines the observed state of DataFlow.
-type DataFlowStatus struct {
+type SinkDataSetParameters struct {
+
+	// The name for the Data Flow transformation.
+	// +kubebuilder:validation:Required
+	Name *string `json:"name" tf:"name,omitempty"`
+
+	// A map of parameters to associate with the Data Factory Linked Service.
+	// +kubebuilder:validation:Optional
+	Parameters map[string]*string `json:"parameters,omitempty" tf:"parameters,omitempty"`
+}
+
+type SinkFlowletObservation struct {
+}
+
+type SinkFlowletParameters struct {
+
+	// Specifies the reference data flow parameters from dataset.
+	// +kubebuilder:validation:Optional
+	DataSetParameters *string `json:"datasetParameters,omitempty" tf:"dataset_parameters,omitempty"`
+
+	// The name for the Data Flow transformation.
+	// +crossplane:generate:reference:type=github.com/upbound/provider-azure/apis/datafactory/v1beta1.FlowletDataFlow
+	// +kubebuilder:validation:Optional
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// Reference to a FlowletDataFlow in datafactory to populate name.
+	// +kubebuilder:validation:Optional
+	NameRef *v1.Reference `json:"nameRef,omitempty" tf:"-"`
+
+	// Selector for a FlowletDataFlow in datafactory to populate name.
+	// +kubebuilder:validation:Optional
+	NameSelector *v1.Selector `json:"nameSelector,omitempty" tf:"-"`
+
+	// A map of parameters to associate with the Data Factory Linked Service.
+	// +kubebuilder:validation:Optional
+	Parameters map[string]*string `json:"parameters,omitempty" tf:"parameters,omitempty"`
+}
+
+type SinkRejectedLinkedServiceObservation struct {
+}
+
+type SinkRejectedLinkedServiceParameters struct {
+
+	// The name for the Data Flow transformation.
+	// +kubebuilder:validation:Required
+	Name *string `json:"name" tf:"name,omitempty"`
+
+	// A map of parameters to associate with the Data Factory Linked Service.
+	// +kubebuilder:validation:Optional
+	Parameters map[string]*string `json:"parameters,omitempty" tf:"parameters,omitempty"`
+}
+
+type SinkSchemaLinkedServiceObservation struct {
+}
+
+type SinkSchemaLinkedServiceParameters struct {
+
+	// The name for the Data Flow transformation.
+	// +kubebuilder:validation:Required
+	Name *string `json:"name" tf:"name,omitempty"`
+
+	// A map of parameters to associate with the Data Factory Linked Service.
+	// +kubebuilder:validation:Optional
+	Parameters map[string]*string `json:"parameters,omitempty" tf:"parameters,omitempty"`
+}
+
+// FlowletDataFlowSpec defines the desired state of FlowletDataFlow
+type FlowletDataFlowSpec struct {
+	v1.ResourceSpec `json:",inline"`
+	ForProvider     FlowletDataFlowParameters `json:"forProvider"`
+}
+
+// FlowletDataFlowStatus defines the observed state of FlowletDataFlow.
+type FlowletDataFlowStatus struct {
 	v1.ResourceStatus `json:",inline"`
-	AtProvider        DataFlowObservation `json:"atProvider,omitempty"`
+	AtProvider        FlowletDataFlowObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// DataFlow is the Schema for the DataFlows API. Manages a Data Flow inside an Azure Data Factory.
+// FlowletDataFlow is the Schema for the FlowletDataFlows API. Manages a Flowlet Data Flow inside an Azure Data Factory.
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,azure}
-type DataFlow struct {
+type FlowletDataFlow struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              DataFlowSpec   `json:"spec"`
-	Status            DataFlowStatus `json:"status,omitempty"`
+	Spec              FlowletDataFlowSpec   `json:"spec"`
+	Status            FlowletDataFlowStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// DataFlowList contains a list of DataFlows
-type DataFlowList struct {
+// FlowletDataFlowList contains a list of FlowletDataFlows
+type FlowletDataFlowList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []DataFlow `json:"items"`
+	Items           []FlowletDataFlow `json:"items"`
 }
 
 // Repository type metadata.
 var (
-	DataFlow_Kind             = "DataFlow"
-	DataFlow_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: DataFlow_Kind}.String()
-	DataFlow_KindAPIVersion   = DataFlow_Kind + "." + CRDGroupVersion.String()
-	DataFlow_GroupVersionKind = CRDGroupVersion.WithKind(DataFlow_Kind)
+	FlowletDataFlow_Kind             = "FlowletDataFlow"
+	FlowletDataFlow_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: FlowletDataFlow_Kind}.String()
+	FlowletDataFlow_KindAPIVersion   = FlowletDataFlow_Kind + "." + CRDGroupVersion.String()
+	FlowletDataFlow_GroupVersionKind = CRDGroupVersion.WithKind(FlowletDataFlow_Kind)
 )
 
 func init() {
-	SchemeBuilder.Register(&DataFlow{}, &DataFlowList{})
+	SchemeBuilder.Register(&FlowletDataFlow{}, &FlowletDataFlowList{})
 }

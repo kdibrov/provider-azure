@@ -1,0 +1,153 @@
+apiVersion: datafactory.azure.upbound.io/v1beta1
+kind: FlowletDataFlow
+metadata:
+  annotations:
+    meta.upbound.io/example-id: datafactory/v1beta1/flowletdataflow
+  labels:
+    testing.upbound.io/example-name: exampleflowlet
+  name: exampleflowlet
+spec:
+  forProvider:
+    dataFactoryIdSelector:
+      matchLabels:
+        testing.upbound.io/example-name: flowletdataflow-df
+    script: "source(\n  allowSchemaDrift: true, \n  validateSchema: false, \n  limit:
+      100, \n  ignoreNoFilesFound: false, \n  documentForm: 'documentPerLine') ~>
+      source1 \nsource1 sink(\n  allowSchemaDrift: true, \n  validateSchema: false,
+      \n  skipDuplicateMapInputs: true, \n  skipDuplicateMapOutputs: true) ~> sink1\n"
+    sink:
+    - flowlet:
+      - nameSelector:
+          matchLabels:
+            testing.upbound.io/example-name: jsonexampletwo
+      linkedService:
+      - nameSelector:
+          matchLabels:
+            testing.upbound.io/example-name: flowletdataflow-ls
+      name: sink1
+    source:
+    - flowlet:
+      - nameSelector:
+          matchLabels:
+            testing.upbound.io/example-name: jsonexampleone
+      linkedService:
+      - nameSelector:
+          matchLabels:
+            testing.upbound.io/example-name: flowletdataflow-ls
+      name: source1
+
+---
+
+apiVersion: datafactory.azure.upbound.io/v1beta1
+kind: Factory
+metadata:
+  annotations:
+    meta.upbound.io/example-id: datafactory/v1beta1/flowletdataflow
+  labels:
+    testing.upbound.io/example-name: flowletdataflow-df
+  name: flowletdataflow-df
+spec:
+  forProvider:
+    location: West Europe
+    resourceGroupNameSelector:
+      matchLabels:
+        testing.upbound.io/example-name: flowletdataflow-rg
+
+---
+
+apiVersion: datafactory.azure.upbound.io/v1beta1
+kind: DataSetJSON
+metadata:
+  annotations:
+    meta.upbound.io/example-id: datafactory/v1beta1/flowletdataflow
+  labels:
+    testing.upbound.io/example-name: jsonexampleone
+  name: jsonexampleone
+spec:
+  forProvider:
+    azureBlobStorageLocation:
+    - container: container
+      filename: foo.txt
+      path: foo/bar/
+    dataFactoryIdSelector:
+      matchLabels:
+        testing.upbound.io/example-name: flowletdataflow-df
+    encoding: UTF-8
+    linkedServiceName: flowletdataflow-ls
+
+---
+
+apiVersion: datafactory.azure.upbound.io/v1beta1
+kind: DataSetJSON
+metadata:
+  annotations:
+    meta.upbound.io/example-id: datafactory/v1beta1/flowletdataflow
+  labels:
+    testing.upbound.io/example-name: jsonexampletwo
+  name: jsonexampletwo
+spec:
+  forProvider:
+    azureBlobStorageLocation:
+    - container: container
+      filename: bar.txt
+      path: foo/bar/
+    dataFactoryIdSelector:
+      matchLabels:
+        testing.upbound.io/example-name: flowletdataflow-df
+    encoding: UTF-8
+    linkedServiceName: flowletdataflow-ls
+
+---
+
+apiVersion: datafactory.azure.upbound.io/v1beta1
+kind: LinkedCustomService
+metadata:
+  annotations:
+    meta.upbound.io/example-id: datafactory/v1beta1/flowletdataflow
+  labels:
+    testing.upbound.io/example-name: flowletdataflow-ls
+  name: flowletdataflow-ls
+spec:
+  forProvider:
+    dataFactoryIdSelector:
+      matchLabels:
+        testing.upbound.io/example-name: flowletdataflow-df
+    type: AzureBlobStorage
+    typePropertiesJson: |
+      {
+        "connectionString": "Server=test;Port=3306;Database=test"
+      }
+
+---
+
+apiVersion: azure.upbound.io/v1beta1
+kind: ResourceGroup
+metadata:
+  annotations:
+    meta.upbound.io/example-id: datafactory/v1beta1/flowletdataflow
+  labels:
+    testing.upbound.io/example-name: flowletdataflow-rg
+  name: flowletdataflow-rg
+spec:
+  forProvider:
+    location: West Europe
+
+---
+
+apiVersion: storage.azure.upbound.io/v1beta1
+kind: Account
+metadata:
+  annotations:
+    meta.upbound.io/example-id: datafactory/v1beta1/flowletdataflow
+  labels:
+    testing.upbound.io/example-name: flowletdataflowacc
+  name: flowletdataflowacc
+spec:
+  forProvider:
+    accountReplicationType: LRS
+    accountTier: Standard
+    location: West Europe
+    resourceGroupNameSelector:
+      matchLabels:
+        testing.upbound.io/example-name: flowletdataflow-rg
+  

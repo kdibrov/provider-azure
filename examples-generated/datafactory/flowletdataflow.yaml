@@ -1,8 +1,8 @@
 apiVersion: datafactory.azure.upbound.io/v1beta1
-kind: DataFlow
+kind: FlowletDataFlow
 metadata:
   annotations:
-    meta.upbound.io/example-id: datafactory/v1beta1/dataflow
+    meta.upbound.io/example-id: datafactory/v1beta1/flowletdataflow
   labels:
     testing.upbound.io/example-name: example
   name: example
@@ -16,28 +16,24 @@ spec:
       source1 \nsource1 sink(\n  allowSchemaDrift: true, \n  validateSchema: false,
       \n  skipDuplicateMapInputs: true, \n  skipDuplicateMapOutputs: true) ~> sink1\n"
     sink:
-    - dataset:
+    - flowlet:
       - nameSelector:
           matchLabels:
             testing.upbound.io/example-name: example2
-      flowlet:
+      linkedService:
       - nameSelector:
           matchLabels:
-            testing.upbound.io/example-name: example2
-        parameters:
-          Key1: value1
+            testing.upbound.io/example-name: test
       name: sink1
     source:
-    - dataset:
+    - flowlet:
       - nameSelector:
           matchLabels:
             testing.upbound.io/example-name: example1
-      flowlet:
+      linkedService:
       - nameSelector:
           matchLabels:
-            testing.upbound.io/example-name: example1
-        parameters:
-          Key1: value1
+            testing.upbound.io/example-name: test
       name: source1
 
 ---
@@ -46,7 +42,7 @@ apiVersion: datafactory.azure.upbound.io/v1beta1
 kind: Factory
 metadata:
   annotations:
-    meta.upbound.io/example-id: datafactory/v1beta1/dataflow
+    meta.upbound.io/example-id: datafactory/v1beta1/flowletdataflow
   labels:
     testing.upbound.io/example-name: example
   name: example
@@ -63,7 +59,7 @@ apiVersion: datafactory.azure.upbound.io/v1beta1
 kind: DataSetJSON
 metadata:
   annotations:
-    meta.upbound.io/example-id: datafactory/v1beta1/dataflow
+    meta.upbound.io/example-id: datafactory/v1beta1/flowletdataflow
   labels:
     testing.upbound.io/example-name: example1
   name: example1
@@ -87,7 +83,7 @@ apiVersion: datafactory.azure.upbound.io/v1beta1
 kind: DataSetJSON
 metadata:
   annotations:
-    meta.upbound.io/example-id: datafactory/v1beta1/dataflow
+    meta.upbound.io/example-id: datafactory/v1beta1/flowletdataflow
   labels:
     testing.upbound.io/example-name: example2
   name: example2
@@ -108,74 +104,10 @@ spec:
 ---
 
 apiVersion: datafactory.azure.upbound.io/v1beta1
-kind: FlowletDataFlow
-metadata:
-  annotations:
-    meta.upbound.io/example-id: datafactory/v1beta1/dataflow
-  labels:
-    testing.upbound.io/example-name: example1
-  name: example1
-spec:
-  forProvider:
-    dataFactoryIdSelector:
-      matchLabels:
-        testing.upbound.io/example-name: test
-    script: "source(\n  allowSchemaDrift: true, \n  validateSchema: false, \n  limit:
-      100, \n  ignoreNoFilesFound: false, \n  documentForm: 'documentPerLine') ~>
-      source1 \nsource1 sink(\n  allowSchemaDrift: true, \n  validateSchema: false,
-      \n  skipDuplicateMapInputs: true, \n  skipDuplicateMapOutputs: true) ~> sink1\n"
-    sink:
-    - linkedService:
-      - nameSelector:
-          matchLabels:
-            testing.upbound.io/example-name: test
-      name: sink1
-    source:
-    - linkedService:
-      - nameSelector:
-          matchLabels:
-            testing.upbound.io/example-name: test
-      name: source1
-
----
-
-apiVersion: datafactory.azure.upbound.io/v1beta1
-kind: FlowletDataFlow
-metadata:
-  annotations:
-    meta.upbound.io/example-id: datafactory/v1beta1/dataflow
-  labels:
-    testing.upbound.io/example-name: example2
-  name: example2
-spec:
-  forProvider:
-    dataFactoryIdSelector:
-      matchLabels:
-        testing.upbound.io/example-name: test
-    script: "source(\n  allowSchemaDrift: true, \n  validateSchema: false, \n  limit:
-      100, \n  ignoreNoFilesFound: false, \n  documentForm: 'documentPerLine') ~>
-      source1 \nsource1 sink(\n  allowSchemaDrift: true, \n  validateSchema: false,
-      \n  skipDuplicateMapInputs: true, \n  skipDuplicateMapOutputs: true) ~> sink1\n"
-    sink:
-    - linkedService:
-      - nameSelector:
-          matchLabels:
-            testing.upbound.io/example-name: test
-      name: sink1
-    source:
-    - linkedService:
-      - nameSelector:
-          matchLabels:
-            testing.upbound.io/example-name: test
-      name: source1
-
----
-
-apiVersion: datafactory.azure.upbound.io/v1beta1
 kind: LinkedCustomService
 metadata:
   annotations:
-    meta.upbound.io/example-id: datafactory/v1beta1/dataflow
+    meta.upbound.io/example-id: datafactory/v1beta1/flowletdataflow
   labels:
     testing.upbound.io/example-name: example
   name: example
@@ -196,7 +128,7 @@ apiVersion: azure.upbound.io/v1beta1
 kind: ResourceGroup
 metadata:
   annotations:
-    meta.upbound.io/example-id: datafactory/v1beta1/dataflow
+    meta.upbound.io/example-id: datafactory/v1beta1/flowletdataflow
   labels:
     testing.upbound.io/example-name: example
   name: example
@@ -210,7 +142,7 @@ apiVersion: storage.azure.upbound.io/v1beta1
 kind: Account
 metadata:
   annotations:
-    meta.upbound.io/example-id: datafactory/v1beta1/dataflow
+    meta.upbound.io/example-id: datafactory/v1beta1/flowletdataflow
   labels:
     testing.upbound.io/example-name: example
   name: example

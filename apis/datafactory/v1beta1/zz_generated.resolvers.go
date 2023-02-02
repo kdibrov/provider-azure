@@ -110,6 +110,26 @@ func (mg *DataFlow) ResolveReferences(ctx context.Context, c client.Reader) erro
 
 		}
 	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Sink); i3++ {
+		for i4 := 0; i4 < len(mg.Spec.ForProvider.Sink[i3].Flowlet); i4++ {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Sink[i3].Flowlet[i4].Name),
+				Extract:      reference.ExternalName(),
+				Reference:    mg.Spec.ForProvider.Sink[i3].Flowlet[i4].NameRef,
+				Selector:     mg.Spec.ForProvider.Sink[i3].Flowlet[i4].NameSelector,
+				To: reference.To{
+					List:    &FlowletDataFlowList{},
+					Managed: &FlowletDataFlow{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.Sink[i3].Flowlet[i4].Name")
+			}
+			mg.Spec.ForProvider.Sink[i3].Flowlet[i4].Name = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.Sink[i3].Flowlet[i4].NameRef = rsp.ResolvedReference
+
+		}
+	}
 	for i3 := 0; i3 < len(mg.Spec.ForProvider.Source); i3++ {
 		for i4 := 0; i4 < len(mg.Spec.ForProvider.Source[i3].DataSet); i4++ {
 			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
@@ -127,6 +147,26 @@ func (mg *DataFlow) ResolveReferences(ctx context.Context, c client.Reader) erro
 			}
 			mg.Spec.ForProvider.Source[i3].DataSet[i4].Name = reference.ToPtrValue(rsp.ResolvedValue)
 			mg.Spec.ForProvider.Source[i3].DataSet[i4].NameRef = rsp.ResolvedReference
+
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Source); i3++ {
+		for i4 := 0; i4 < len(mg.Spec.ForProvider.Source[i3].Flowlet); i4++ {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Source[i3].Flowlet[i4].Name),
+				Extract:      reference.ExternalName(),
+				Reference:    mg.Spec.ForProvider.Source[i3].Flowlet[i4].NameRef,
+				Selector:     mg.Spec.ForProvider.Source[i3].Flowlet[i4].NameSelector,
+				To: reference.To{
+					List:    &FlowletDataFlowList{},
+					Managed: &FlowletDataFlow{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.Source[i3].Flowlet[i4].Name")
+			}
+			mg.Spec.ForProvider.Source[i3].Flowlet[i4].Name = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.Source[i3].Flowlet[i4].NameRef = rsp.ResolvedReference
 
 		}
 	}
@@ -512,6 +552,48 @@ func (mg *DataSetPostgreSQL) ResolveReferences(ctx context.Context, c client.Rea
 	return nil
 }
 
+// ResolveReferences of this DataSetSQLServerTable.
+func (mg *DataSetSQLServerTable) ResolveReferences(ctx context.Context, c client.Reader) error {
+	r := reference.NewAPIResolver(c, mg)
+
+	var rsp reference.ResolutionResponse
+	var err error
+
+	rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+		CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.DataFactoryID),
+		Extract:      resource.ExtractResourceID(),
+		Reference:    mg.Spec.ForProvider.DataFactoryIDRef,
+		Selector:     mg.Spec.ForProvider.DataFactoryIDSelector,
+		To: reference.To{
+			List:    &FactoryList{},
+			Managed: &Factory{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.DataFactoryID")
+	}
+	mg.Spec.ForProvider.DataFactoryID = reference.ToPtrValue(rsp.ResolvedValue)
+	mg.Spec.ForProvider.DataFactoryIDRef = rsp.ResolvedReference
+
+	rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+		CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.LinkedServiceName),
+		Extract:      reference.ExternalName(),
+		Reference:    mg.Spec.ForProvider.LinkedServiceNameRef,
+		Selector:     mg.Spec.ForProvider.LinkedServiceNameSelector,
+		To: reference.To{
+			List:    &LinkedServiceSQLServerList{},
+			Managed: &LinkedServiceSQLServer{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.LinkedServiceName")
+	}
+	mg.Spec.ForProvider.LinkedServiceName = reference.ToPtrValue(rsp.ResolvedValue)
+	mg.Spec.ForProvider.LinkedServiceNameRef = rsp.ResolvedReference
+
+	return nil
+}
+
 // ResolveReferences of this DataSetSnowflake.
 func (mg *DataSetSnowflake) ResolveReferences(ctx context.Context, c client.Reader) error {
 	r := reference.NewAPIResolver(c, mg)
@@ -576,6 +658,113 @@ func (mg *Factory) ResolveReferences(ctx context.Context, c client.Reader) error
 	}
 	mg.Spec.ForProvider.ResourceGroupName = reference.ToPtrValue(rsp.ResolvedValue)
 	mg.Spec.ForProvider.ResourceGroupNameRef = rsp.ResolvedReference
+
+	return nil
+}
+
+// ResolveReferences of this FlowletDataFlow.
+func (mg *FlowletDataFlow) ResolveReferences(ctx context.Context, c client.Reader) error {
+	r := reference.NewAPIResolver(c, mg)
+
+	var rsp reference.ResolutionResponse
+	var err error
+
+	rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+		CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.DataFactoryID),
+		Extract:      resource.ExtractResourceID(),
+		Reference:    mg.Spec.ForProvider.DataFactoryIDRef,
+		Selector:     mg.Spec.ForProvider.DataFactoryIDSelector,
+		To: reference.To{
+			List:    &FactoryList{},
+			Managed: &Factory{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.DataFactoryID")
+	}
+	mg.Spec.ForProvider.DataFactoryID = reference.ToPtrValue(rsp.ResolvedValue)
+	mg.Spec.ForProvider.DataFactoryIDRef = rsp.ResolvedReference
+
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Sink); i3++ {
+		for i4 := 0; i4 < len(mg.Spec.ForProvider.Sink[i3].Flowlet); i4++ {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Sink[i3].Flowlet[i4].Name),
+				Extract:      reference.ExternalName(),
+				Reference:    mg.Spec.ForProvider.Sink[i3].Flowlet[i4].NameRef,
+				Selector:     mg.Spec.ForProvider.Sink[i3].Flowlet[i4].NameSelector,
+				To: reference.To{
+					List:    &FlowletDataFlowList{},
+					Managed: &FlowletDataFlow{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.Sink[i3].Flowlet[i4].Name")
+			}
+			mg.Spec.ForProvider.Sink[i3].Flowlet[i4].Name = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.Sink[i3].Flowlet[i4].NameRef = rsp.ResolvedReference
+
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Sink); i3++ {
+		for i4 := 0; i4 < len(mg.Spec.ForProvider.Sink[i3].LinkedService); i4++ {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Sink[i3].LinkedService[i4].Name),
+				Extract:      reference.ExternalName(),
+				Reference:    mg.Spec.ForProvider.Sink[i3].LinkedService[i4].NameRef,
+				Selector:     mg.Spec.ForProvider.Sink[i3].LinkedService[i4].NameSelector,
+				To: reference.To{
+					List:    &LinkedCustomServiceList{},
+					Managed: &LinkedCustomService{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.Sink[i3].LinkedService[i4].Name")
+			}
+			mg.Spec.ForProvider.Sink[i3].LinkedService[i4].Name = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.Sink[i3].LinkedService[i4].NameRef = rsp.ResolvedReference
+
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Source); i3++ {
+		for i4 := 0; i4 < len(mg.Spec.ForProvider.Source[i3].Flowlet); i4++ {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Source[i3].Flowlet[i4].Name),
+				Extract:      reference.ExternalName(),
+				Reference:    mg.Spec.ForProvider.Source[i3].Flowlet[i4].NameRef,
+				Selector:     mg.Spec.ForProvider.Source[i3].Flowlet[i4].NameSelector,
+				To: reference.To{
+					List:    &FlowletDataFlowList{},
+					Managed: &FlowletDataFlow{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.Source[i3].Flowlet[i4].Name")
+			}
+			mg.Spec.ForProvider.Source[i3].Flowlet[i4].Name = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.Source[i3].Flowlet[i4].NameRef = rsp.ResolvedReference
+
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Source); i3++ {
+		for i4 := 0; i4 < len(mg.Spec.ForProvider.Source[i3].LinkedService); i4++ {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Source[i3].LinkedService[i4].Name),
+				Extract:      reference.ExternalName(),
+				Reference:    mg.Spec.ForProvider.Source[i3].LinkedService[i4].NameRef,
+				Selector:     mg.Spec.ForProvider.Source[i3].LinkedService[i4].NameSelector,
+				To: reference.To{
+					List:    &LinkedCustomServiceList{},
+					Managed: &LinkedCustomService{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.Source[i3].LinkedService[i4].Name")
+			}
+			mg.Spec.ForProvider.Source[i3].LinkedService[i4].Name = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.Source[i3].LinkedService[i4].NameRef = rsp.ResolvedReference
+
+		}
+	}
 
 	return nil
 }
@@ -665,6 +854,51 @@ func (mg *IntegrationRuntimeAzureSSIS) ResolveReferences(ctx context.Context, c 
 		mg.Spec.ForProvider.VnetIntegration[i3].SubnetIDRef = rsp.ResolvedReference
 
 	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.VnetIntegration); i3++ {
+		rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+			CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.VnetIntegration[i3].SubnetName),
+			Extract:      reference.ExternalName(),
+			Reference:    mg.Spec.ForProvider.VnetIntegration[i3].SubnetNameRef,
+			Selector:     mg.Spec.ForProvider.VnetIntegration[i3].SubnetNameSelector,
+			To: reference.To{
+				List:    &v1beta11.SubnetList{},
+				Managed: &v1beta11.Subnet{},
+			},
+		})
+		if err != nil {
+			return errors.Wrap(err, "mg.Spec.ForProvider.VnetIntegration[i3].SubnetName")
+		}
+		mg.Spec.ForProvider.VnetIntegration[i3].SubnetName = reference.ToPtrValue(rsp.ResolvedValue)
+		mg.Spec.ForProvider.VnetIntegration[i3].SubnetNameRef = rsp.ResolvedReference
+
+	}
+
+	return nil
+}
+
+// ResolveReferences of this IntegrationRuntimeManaged.
+func (mg *IntegrationRuntimeManaged) ResolveReferences(ctx context.Context, c client.Reader) error {
+	r := reference.NewAPIResolver(c, mg)
+
+	var rsp reference.ResolutionResponse
+	var err error
+
+	rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+		CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.DataFactoryID),
+		Extract:      resource.ExtractResourceID(),
+		Reference:    mg.Spec.ForProvider.DataFactoryIDRef,
+		Selector:     mg.Spec.ForProvider.DataFactoryIDSelector,
+		To: reference.To{
+			List:    &FactoryList{},
+			Managed: &Factory{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.DataFactoryID")
+	}
+	mg.Spec.ForProvider.DataFactoryID = reference.ToPtrValue(rsp.ResolvedValue)
+	mg.Spec.ForProvider.DataFactoryIDRef = rsp.ResolvedReference
+
 	for i3 := 0; i3 < len(mg.Spec.ForProvider.VnetIntegration); i3++ {
 		rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
 			CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.VnetIntegration[i3].SubnetName),
@@ -992,6 +1226,32 @@ func (mg *LinkedServiceAzureTableStorage) ResolveReferences(ctx context.Context,
 
 // ResolveReferences of this LinkedServiceCosmosDB.
 func (mg *LinkedServiceCosmosDB) ResolveReferences(ctx context.Context, c client.Reader) error {
+	r := reference.NewAPIResolver(c, mg)
+
+	var rsp reference.ResolutionResponse
+	var err error
+
+	rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+		CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.DataFactoryID),
+		Extract:      resource.ExtractResourceID(),
+		Reference:    mg.Spec.ForProvider.DataFactoryIDRef,
+		Selector:     mg.Spec.ForProvider.DataFactoryIDSelector,
+		To: reference.To{
+			List:    &FactoryList{},
+			Managed: &Factory{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.DataFactoryID")
+	}
+	mg.Spec.ForProvider.DataFactoryID = reference.ToPtrValue(rsp.ResolvedValue)
+	mg.Spec.ForProvider.DataFactoryIDRef = rsp.ResolvedReference
+
+	return nil
+}
+
+// ResolveReferences of this LinkedServiceCosmosDBMongoapi.
+func (mg *LinkedServiceCosmosDBMongoapi) ResolveReferences(ctx context.Context, c client.Reader) error {
 	r := reference.NewAPIResolver(c, mg)
 
 	var rsp reference.ResolutionResponse

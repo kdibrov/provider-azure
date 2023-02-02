@@ -157,9 +157,12 @@ import (
 	datasetparquet "github.com/upbound/provider-azure/internal/controller/datafactory/datasetparquet"
 	datasetpostgresql "github.com/upbound/provider-azure/internal/controller/datafactory/datasetpostgresql"
 	datasetsnowflake "github.com/upbound/provider-azure/internal/controller/datafactory/datasetsnowflake"
+	datasetsqlservertable "github.com/upbound/provider-azure/internal/controller/datafactory/datasetsqlservertable"
 	factory "github.com/upbound/provider-azure/internal/controller/datafactory/factory"
+	flowletdataflow "github.com/upbound/provider-azure/internal/controller/datafactory/flowletdataflow"
 	integrationruntimeazure "github.com/upbound/provider-azure/internal/controller/datafactory/integrationruntimeazure"
 	integrationruntimeazuressis "github.com/upbound/provider-azure/internal/controller/datafactory/integrationruntimeazuressis"
+	integrationruntimemanaged "github.com/upbound/provider-azure/internal/controller/datafactory/integrationruntimemanaged"
 	integrationruntimeselfhosted "github.com/upbound/provider-azure/internal/controller/datafactory/integrationruntimeselfhosted"
 	linkedcustomservice "github.com/upbound/provider-azure/internal/controller/datafactory/linkedcustomservice"
 	linkedserviceazureblobstorage "github.com/upbound/provider-azure/internal/controller/datafactory/linkedserviceazureblobstorage"
@@ -170,6 +173,7 @@ import (
 	linkedserviceazuresqldatabase "github.com/upbound/provider-azure/internal/controller/datafactory/linkedserviceazuresqldatabase"
 	linkedserviceazuretablestorage "github.com/upbound/provider-azure/internal/controller/datafactory/linkedserviceazuretablestorage"
 	linkedservicecosmosdb "github.com/upbound/provider-azure/internal/controller/datafactory/linkedservicecosmosdb"
+	linkedservicecosmosdbmongoapi "github.com/upbound/provider-azure/internal/controller/datafactory/linkedservicecosmosdbmongoapi"
 	linkedservicedatalakestoragegen2 "github.com/upbound/provider-azure/internal/controller/datafactory/linkedservicedatalakestoragegen2"
 	linkedservicekeyvault "github.com/upbound/provider-azure/internal/controller/datafactory/linkedservicekeyvault"
 	linkedservicekusto "github.com/upbound/provider-azure/internal/controller/datafactory/linkedservicekusto"
@@ -191,9 +195,11 @@ import (
 	databasemigrationservice "github.com/upbound/provider-azure/internal/controller/datamigration/databasemigrationservice"
 	backupinstanceblobstorage "github.com/upbound/provider-azure/internal/controller/dataprotection/backupinstanceblobstorage"
 	backupinstancedisk "github.com/upbound/provider-azure/internal/controller/dataprotection/backupinstancedisk"
+	backupinstancepostgresql "github.com/upbound/provider-azure/internal/controller/dataprotection/backupinstancepostgresql"
 	backuppolicyblobstorage "github.com/upbound/provider-azure/internal/controller/dataprotection/backuppolicyblobstorage"
 	backuppolicydisk "github.com/upbound/provider-azure/internal/controller/dataprotection/backuppolicydisk"
 	backupvault "github.com/upbound/provider-azure/internal/controller/dataprotection/backupvault"
+	resourceguard "github.com/upbound/provider-azure/internal/controller/dataprotection/resourceguard"
 	accountdatashare "github.com/upbound/provider-azure/internal/controller/datashare/account"
 	datasetblobstorage "github.com/upbound/provider-azure/internal/controller/datashare/datasetblobstorage"
 	datasetdatalakegen2 "github.com/upbound/provider-azure/internal/controller/datashare/datasetdatalakegen2"
@@ -681,9 +687,12 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		datasetparquet.Setup,
 		datasetpostgresql.Setup,
 		datasetsnowflake.Setup,
+		datasetsqlservertable.Setup,
 		factory.Setup,
+		flowletdataflow.Setup,
 		integrationruntimeazure.Setup,
 		integrationruntimeazuressis.Setup,
+		integrationruntimemanaged.Setup,
 		integrationruntimeselfhosted.Setup,
 		linkedcustomservice.Setup,
 		linkedserviceazureblobstorage.Setup,
@@ -694,6 +703,7 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		linkedserviceazuresqldatabase.Setup,
 		linkedserviceazuretablestorage.Setup,
 		linkedservicecosmosdb.Setup,
+		linkedservicecosmosdbmongoapi.Setup,
 		linkedservicedatalakestoragegen2.Setup,
 		linkedservicekeyvault.Setup,
 		linkedservicekusto.Setup,
@@ -715,9 +725,11 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		databasemigrationservice.Setup,
 		backupinstanceblobstorage.Setup,
 		backupinstancedisk.Setup,
+		backupinstancepostgresql.Setup,
 		backuppolicyblobstorage.Setup,
 		backuppolicydisk.Setup,
 		backupvault.Setup,
+		resourceguard.Setup,
 		accountdatashare.Setup,
 		datasetblobstorage.Setup,
 		datasetdatalakegen2.Setup,
