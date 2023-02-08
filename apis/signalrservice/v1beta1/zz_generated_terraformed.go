@@ -234,3 +234,151 @@ func (tr *SignalrSharedPrivateLinkResource) LateInitialize(attrs []byte) (bool, 
 func (tr *SignalrSharedPrivateLinkResource) GetTerraformSchemaVersion() int {
 	return 0
 }
+
+// GetTerraformResourceType returns Terraform resource type for this WebPubsub
+func (mg *WebPubsub) GetTerraformResourceType() string {
+	return "azurerm_web_pubsub"
+}
+
+// GetConnectionDetailsMapping for this WebPubsub
+func (tr *WebPubsub) GetConnectionDetailsMapping() map[string]string {
+	return map[string]string{"primary_access_key": "status.atProvider.primaryAccessKey", "primary_connection_string": "status.atProvider.primaryConnectionString", "secondary_access_key": "status.atProvider.secondaryAccessKey", "secondary_connection_string": "status.atProvider.secondaryConnectionString"}
+}
+
+// GetObservation of this WebPubsub
+func (tr *WebPubsub) GetObservation() (map[string]any, error) {
+	o, err := json.TFParser.Marshal(tr.Status.AtProvider)
+	if err != nil {
+		return nil, err
+	}
+	base := map[string]any{}
+	return base, json.TFParser.Unmarshal(o, &base)
+}
+
+// SetObservation for this WebPubsub
+func (tr *WebPubsub) SetObservation(obs map[string]any) error {
+	p, err := json.TFParser.Marshal(obs)
+	if err != nil {
+		return err
+	}
+	return json.TFParser.Unmarshal(p, &tr.Status.AtProvider)
+}
+
+// GetID returns ID of underlying Terraform resource of this WebPubsub
+func (tr *WebPubsub) GetID() string {
+	if tr.Status.AtProvider.ID == nil {
+		return ""
+	}
+	return *tr.Status.AtProvider.ID
+}
+
+// GetParameters of this WebPubsub
+func (tr *WebPubsub) GetParameters() (map[string]any, error) {
+	p, err := json.TFParser.Marshal(tr.Spec.ForProvider)
+	if err != nil {
+		return nil, err
+	}
+	base := map[string]any{}
+	return base, json.TFParser.Unmarshal(p, &base)
+}
+
+// SetParameters for this WebPubsub
+func (tr *WebPubsub) SetParameters(params map[string]any) error {
+	p, err := json.TFParser.Marshal(params)
+	if err != nil {
+		return err
+	}
+	return json.TFParser.Unmarshal(p, &tr.Spec.ForProvider)
+}
+
+// LateInitialize this WebPubsub using its observed tfState.
+// returns True if there are any spec changes for the resource.
+func (tr *WebPubsub) LateInitialize(attrs []byte) (bool, error) {
+	params := &WebPubsubParameters{}
+	if err := json.TFParser.Unmarshal(attrs, params); err != nil {
+		return false, errors.Wrap(err, "failed to unmarshal Terraform state parameters for late-initialization")
+	}
+	opts := []resource.GenericLateInitializerOption{resource.WithZeroValueJSONOmitEmptyFilter(resource.CNameWildcard)}
+
+	li := resource.NewGenericLateInitializer(opts...)
+	return li.LateInitialize(&tr.Spec.ForProvider, params)
+}
+
+// GetTerraformSchemaVersion returns the associated Terraform schema version
+func (tr *WebPubsub) GetTerraformSchemaVersion() int {
+	return 1
+}
+
+// GetTerraformResourceType returns Terraform resource type for this WebPubsubNetworkACL
+func (mg *WebPubsubNetworkACL) GetTerraformResourceType() string {
+	return "azurerm_web_pubsub_network_acl"
+}
+
+// GetConnectionDetailsMapping for this WebPubsubNetworkACL
+func (tr *WebPubsubNetworkACL) GetConnectionDetailsMapping() map[string]string {
+	return nil
+}
+
+// GetObservation of this WebPubsubNetworkACL
+func (tr *WebPubsubNetworkACL) GetObservation() (map[string]any, error) {
+	o, err := json.TFParser.Marshal(tr.Status.AtProvider)
+	if err != nil {
+		return nil, err
+	}
+	base := map[string]any{}
+	return base, json.TFParser.Unmarshal(o, &base)
+}
+
+// SetObservation for this WebPubsubNetworkACL
+func (tr *WebPubsubNetworkACL) SetObservation(obs map[string]any) error {
+	p, err := json.TFParser.Marshal(obs)
+	if err != nil {
+		return err
+	}
+	return json.TFParser.Unmarshal(p, &tr.Status.AtProvider)
+}
+
+// GetID returns ID of underlying Terraform resource of this WebPubsubNetworkACL
+func (tr *WebPubsubNetworkACL) GetID() string {
+	if tr.Status.AtProvider.ID == nil {
+		return ""
+	}
+	return *tr.Status.AtProvider.ID
+}
+
+// GetParameters of this WebPubsubNetworkACL
+func (tr *WebPubsubNetworkACL) GetParameters() (map[string]any, error) {
+	p, err := json.TFParser.Marshal(tr.Spec.ForProvider)
+	if err != nil {
+		return nil, err
+	}
+	base := map[string]any{}
+	return base, json.TFParser.Unmarshal(p, &base)
+}
+
+// SetParameters for this WebPubsubNetworkACL
+func (tr *WebPubsubNetworkACL) SetParameters(params map[string]any) error {
+	p, err := json.TFParser.Marshal(params)
+	if err != nil {
+		return err
+	}
+	return json.TFParser.Unmarshal(p, &tr.Spec.ForProvider)
+}
+
+// LateInitialize this WebPubsubNetworkACL using its observed tfState.
+// returns True if there are any spec changes for the resource.
+func (tr *WebPubsubNetworkACL) LateInitialize(attrs []byte) (bool, error) {
+	params := &WebPubsubNetworkACLParameters{}
+	if err := json.TFParser.Unmarshal(attrs, params); err != nil {
+		return false, errors.Wrap(err, "failed to unmarshal Terraform state parameters for late-initialization")
+	}
+	opts := []resource.GenericLateInitializerOption{resource.WithZeroValueJSONOmitEmptyFilter(resource.CNameWildcard)}
+
+	li := resource.NewGenericLateInitializer(opts...)
+	return li.LateInitialize(&tr.Spec.ForProvider, params)
+}
+
+// GetTerraformSchemaVersion returns the associated Terraform schema version
+func (tr *WebPubsubNetworkACL) GetTerraformSchemaVersion() int {
+	return 0
+}

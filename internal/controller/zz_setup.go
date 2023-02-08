@@ -562,6 +562,8 @@ import (
 	networkacl "github.com/upbound/provider-azure/internal/controller/signalrservice/networkacl"
 	servicesignalrservice "github.com/upbound/provider-azure/internal/controller/signalrservice/service"
 	signalrsharedprivatelinkresource "github.com/upbound/provider-azure/internal/controller/signalrservice/signalrsharedprivatelinkresource"
+	webpubsub "github.com/upbound/provider-azure/internal/controller/signalrservice/webpubsub"
+	webpubsubnetworkacl "github.com/upbound/provider-azure/internal/controller/signalrservice/webpubsubnetworkacl"
 	managedapplicationdefinition "github.com/upbound/provider-azure/internal/controller/solutions/managedapplicationdefinition"
 	cloudapplicationliveview "github.com/upbound/provider-azure/internal/controller/spring/cloudapplicationliveview"
 	mssqldatabase "github.com/upbound/provider-azure/internal/controller/sql/mssqldatabase"
@@ -652,6 +654,10 @@ import (
 	serviceplan "github.com/upbound/provider-azure/internal/controller/web/serviceplan"
 	sourcecontroltoken "github.com/upbound/provider-azure/internal/controller/web/sourcecontroltoken"
 	staticsite "github.com/upbound/provider-azure/internal/controller/web/staticsite"
+	windowsfunctionapp "github.com/upbound/provider-azure/internal/controller/web/windowsfunctionapp"
+	windowsfunctionappslot "github.com/upbound/provider-azure/internal/controller/web/windowsfunctionappslot"
+	windowswebapp "github.com/upbound/provider-azure/internal/controller/web/windowswebapp"
+	windowswebappslot "github.com/upbound/provider-azure/internal/controller/web/windowswebappslot"
 )
 
 // Setup creates all controllers with the supplied logger and adds them to
@@ -1211,6 +1217,8 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		networkacl.Setup,
 		servicesignalrservice.Setup,
 		signalrsharedprivatelinkresource.Setup,
+		webpubsub.Setup,
+		webpubsubnetworkacl.Setup,
 		managedapplicationdefinition.Setup,
 		cloudapplicationliveview.Setup,
 		mssqldatabase.Setup,
@@ -1301,6 +1309,10 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		serviceplan.Setup,
 		sourcecontroltoken.Setup,
 		staticsite.Setup,
+		windowsfunctionapp.Setup,
+		windowsfunctionappslot.Setup,
+		windowswebapp.Setup,
+		windowswebappslot.Setup,
 	} {
 		if err := setup(mgr, o); err != nil {
 			return err

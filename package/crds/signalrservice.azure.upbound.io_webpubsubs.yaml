@@ -5,18 +5,18 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.8.0
   creationTimestamp: null
-  name: functionappactiveslots.web.azure.upbound.io
+  name: webpubsubs.signalrservice.azure.upbound.io
 spec:
-  group: web.azure.upbound.io
+  group: signalrservice.azure.upbound.io
   names:
     categories:
     - crossplane
     - managed
     - azure
-    kind: FunctionAppActiveSlot
-    listKind: FunctionAppActiveSlotList
-    plural: functionappactiveslots
-    singular: functionappactiveslot
+    kind: WebPubsub
+    listKind: WebPubsubList
+    plural: webpubsubs
+    singular: webpubsub
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -35,8 +35,8 @@ spec:
     name: v1beta1
     schema:
       openAPIV3Schema:
-        description: FunctionAppActiveSlot is the Schema for the FunctionAppActiveSlots
-          API. Manages a Function App Active Slot.
+        description: WebPubsub is the Schema for the WebPubsubs API. Manages an Azure
+          Web PubSub service.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -51,7 +51,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: FunctionAppActiveSlotSpec defines the desired state of FunctionAppActiveSlot
+            description: WebPubsubSpec defines the desired state of WebPubsub
             properties:
               deletionPolicy:
                 default: Delete
@@ -64,21 +64,75 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  overwriteNetworkConfig:
-                    description: The swap action should overwrite the Production slot's
-                      network configuration with the configuration from this slot.
-                      Defaults to true. Changing this forces a new resource to be
-                      created. The swap action should overwrite the Production slot's
-                      network configuration with the configuration from this slot.
-                      Defaults to `true`.
+                  aadAuthEnabled:
+                    description: Whether to enable AAD auth? Defaults to true.
                     type: boolean
-                  slotId:
-                    description: The ID of the Slot to swap with Production. The ID
-                      of the Slot to swap with `Production`.
+                  capacity:
+                    description: 'Specifies the number of units associated with this
+                      Web PubSub resource. Valid values are: Free: 1, Standard: 1,
+                      2, 5, 10, 20, 50, 100.'
+                    type: number
+                  identity:
+                    description: An identity block as defined below.
+                    items:
+                      properties:
+                        identityIds:
+                          description: Specifies a list of User Assigned Managed Identity
+                            IDs to be assigned to this Web PubSub.
+                          items:
+                            type: string
+                          type: array
+                        type:
+                          description: Specifies the type of Managed Service Identity
+                            that should be configured on this Web PubSub. Possible
+                            values are SystemAssigned, UserAssigned.
+                          type: string
+                      required:
+                      - type
+                      type: object
+                    type: array
+                  liveTrace:
+                    description: A live_trace block as defined below.
+                    items:
+                      properties:
+                        connectivityLogsEnabled:
+                          description: Whether the log category ConnectivityLogs is
+                            enabled? Defaults to true
+                          type: boolean
+                        enabled:
+                          description: Whether the live trace is enabled? Defaults
+                            to true.
+                          type: boolean
+                        httpRequestLogsEnabled:
+                          description: Whether the log category HttpRequestLogs is
+                            enabled? Defaults to true
+                          type: boolean
+                        messagingLogsEnabled:
+                          description: Whether the log category MessagingLogs is enabled?
+                            Defaults to true
+                          type: boolean
+                      type: object
+                    type: array
+                  localAuthEnabled:
+                    description: Whether to enable local auth? Defaults to true.
+                    type: boolean
+                  location:
+                    description: Specifies the supported Azure location where the
+                      Web PubSub service exists. Changing this forces a new resource
+                      to be created.
                     type: string
-                  slotIdRef:
-                    description: Reference to a WindowsFunctionAppSlot in web to populate
-                      slotId.
+                  publicNetworkAccessEnabled:
+                    description: Whether to enable public network access? Defaults
+                      to true.
+                    type: boolean
+                  resourceGroupName:
+                    description: The name of the resource group in which to create
+                      the Web PubSub service. Changing this forces a new resource
+                      to be created.
+                    type: string
+                  resourceGroupNameRef:
+                    description: Reference to a ResourceGroup in azure to populate
+                      resourceGroupName.
                     properties:
                       name:
                         description: Name of the referenced object.
@@ -111,9 +165,9 @@ spec:
                     required:
                     - name
                     type: object
-                  slotIdSelector:
-                    description: Selector for a WindowsFunctionAppSlot in web to populate
-                      slotId.
+                  resourceGroupNameSelector:
+                    description: Selector for a ResourceGroup in azure to populate
+                      resourceGroupName.
                     properties:
                       matchControllerRef:
                         description: MatchControllerRef ensures an object with the
@@ -151,6 +205,22 @@ spec:
                             type: string
                         type: object
                     type: object
+                  sku:
+                    description: Specifies which SKU to use. Possible values are Free_F1
+                      and Standard_S1.
+                    type: string
+                  tags:
+                    additionalProperties:
+                      type: string
+                    description: A mapping of tags to assign to the resource.
+                    type: object
+                  tlsClientCertEnabled:
+                    description: Whether to request client certificate during TLS
+                      handshake? Defaults to false.
+                    type: boolean
+                required:
+                - location
+                - sku
                 type: object
               providerConfigRef:
                 default:
@@ -324,17 +394,41 @@ spec:
             - forProvider
             type: object
           status:
-            description: FunctionAppActiveSlotStatus defines the observed state of
-              FunctionAppActiveSlot.
+            description: WebPubsubStatus defines the observed state of WebPubsub.
             properties:
               atProvider:
                 properties:
-                  id:
-                    description: The ID of the Function App Active Slot
+                  externalIp:
                     type: string
-                  lastSuccessfulSwap:
-                    description: The timestamp of the last successful swap with Production
-                      The timestamp of the last successful swap with `Production`
+                  hostname:
+                    description: The FQDN of the Web PubSub service.
+                    type: string
+                  id:
+                    description: The ID of the Web PubSub service.
+                    type: string
+                  identity:
+                    description: An identity block as defined below.
+                    items:
+                      properties:
+                        principalId:
+                          description: The Principal ID associated with this Managed
+                            Service Identity.
+                          type: string
+                        tenantId:
+                          description: The Tenant ID associated with this Managed
+                            Service Identity.
+                          type: string
+                      type: object
+                    type: array
+                  publicPort:
+                    description: The publicly accessible port of the Web PubSub service
+                      which is designed for browser/client use.
+                    type: number
+                  serverPort:
+                    description: The publicly accessible port of the Web PubSub service
+                      which is designed for customer server side use.
+                    type: number
+                  version:
                     type: string
                 type: object
               conditions:
