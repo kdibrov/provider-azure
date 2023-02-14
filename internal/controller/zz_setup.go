@@ -579,6 +579,7 @@ import (
 	servicesignalrservice "github.com/upbound/provider-azure/internal/controller/signalrservice/service"
 	signalrsharedprivatelinkresource "github.com/upbound/provider-azure/internal/controller/signalrservice/signalrsharedprivatelinkresource"
 	webpubsub "github.com/upbound/provider-azure/internal/controller/signalrservice/webpubsub"
+	webpubsubhub "github.com/upbound/provider-azure/internal/controller/signalrservice/webpubsubhub"
 	webpubsubnetworkacl "github.com/upbound/provider-azure/internal/controller/signalrservice/webpubsubnetworkacl"
 	managedapplicationdefinition "github.com/upbound/provider-azure/internal/controller/solutions/managedapplicationdefinition"
 	cloudapplicationliveview "github.com/upbound/provider-azure/internal/controller/spring/cloudapplicationliveview"
@@ -1251,6 +1252,7 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		servicesignalrservice.Setup,
 		signalrsharedprivatelinkresource.Setup,
 		webpubsub.Setup,
+		webpubsubhub.Setup,
 		webpubsubnetworkacl.Setup,
 		managedapplicationdefinition.Setup,
 		cloudapplicationliveview.Setup,

@@ -118,6 +118,7 @@ spec:
   forProvider:
     capacity: 1
     location: east us
+    name: tfex-webpubsub
     resourceGroupNameSelector:
       matchLabels:
         testing.upbound.io/example-name: example
